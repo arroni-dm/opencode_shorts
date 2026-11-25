@@ -18,9 +18,9 @@ from niche import research_references, summarize_patterns
 
 def main():
     openai_key = os.getenv("OPENAI_API_KEY")
-    model = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
+    model = os.getenv("OPENAI_MODEL") or "gpt-4o-mini"
     use_tts = os.getenv("USE_OPENAI_TTS", "false").lower() == "true"
-    tts_voice = os.getenv("OPENAI_TTS_VOICE", "alloy")
+    tts_voice = os.getenv("OPENAI_TTS_VOICE") or "alloy"
     width = int(os.getenv("VIDEO_WIDTH", "1080"))
     height = int(os.getenv("VIDEO_HEIGHT", "1920"))
     target = int(os.getenv("TARGET_SECONDS", "55"))
@@ -63,7 +63,7 @@ def main():
         openai_key=openai_key, use_openai=use_tts, voice=tts_voice,
     )
     print(f"Audio: {duration:.2f}s")
-    if duration < 48 or duration > 62:
+    if duration < 49.5 or duration > 60.5:
         raise RuntimeError(f"Audio duration {duration:.2f}s outside 50-60s window")
 
     srt_path = os.path.join(work, "captions.srt")

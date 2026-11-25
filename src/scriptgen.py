@@ -24,7 +24,7 @@ def generate_script(topic_obj, openai_key=None, model="gpt-4o-mini", target_seco
     keywords = topic_obj.get("keywords", [])
     used_topics = used_topics or []
     patterns = patterns or {}
-    words_target = int(target_seconds * 2.1)  # ~2.1 words/sec
+    words_target = int(target_seconds * 2.45)  # ~2.4 words/sec (calibrated for gTTS)
     if openai_key:
         try:
             from openai import OpenAI
@@ -53,11 +53,14 @@ def generate_script(topic_obj, openai_key=None, model="gpt-4o-mini", target_seco
         except Exception as e:
             print(f"[scriptgen] OpenAI failed, falling back: {e}")
     narration = (
-        f"Here is a quick story about {topic}. "
-        "It starts small, then gets strange, then flips at the end. "
-        "Pay attention to the one detail everyone misses. "
-        "By the time you notice it, the story is already over. "
-        "And that is why people still talk about it today."
+        f"Here is a quick story about {topic}. It starts in an ordinary place, with an ordinary person, "
+        "and a single small decision that should not have mattered. But it did. One detail was missed, "
+        "one rule was bent, and one moment stretched longer than anyone expected. People looked back and "
+        "tried to explain it, yet every explanation left one loose thread. That loose thread is the part "
+        "that makes the story travel. It is not the big event that hooks you, it is the quiet mistake "
+        "hiding inside it. By the end, the lesson is simple: small choices echo, and the truth is usually "
+        "stranger than the rumor. That tiny detail is what turns a simple event into a story worth sharing. "
+        "That is why people still talk about it today."
     )
     return {
         "title": f"Quick story: {topic}"[:60],
