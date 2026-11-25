@@ -1,0 +1,55 @@
+name: YouTube Auto Pipeline
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+    - cron: '48 4 * * *'
+    - cron: '36 9 * * *'
+    - cron: '24 14 * * *'
+    - cron: '12 19 * * *'
+  workflow_dispatch:
+
+jobs:
+  produce-and-upload:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install system deps
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg fonts-dejavu-core
+      - name: Restore run state
+        uses: actions/cache@v4
+        with:
+          path: state
+          key: yt-pipeline-state-${{ github.run_number }}
+          restore-keys: |
+            yt-pipeline-state-
+      - name: Install python deps
+        run: pip install -r requirements.txt
+      - name: Run pipeline
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          OPENAI_MODEL: ${{ vars.OPENAI_MODEL }}
+          USE_OPENAI_TTS: ${{ vars.USE_OPENAI_TTS }}
+          OPENAI_TTS_VOICE: ${{ vars.OPENAI_TTS_VOICE }}
+          PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
+          PIXABAY_API_KEY: ${{ secrets.PIXABAY_API_KEY }}
+          COVERR_API_KEY: ${{ secrets.COVERR_API_KEY }}
+          STORYBLOCKS_PUBLIC_KEY: ${{ secrets.STORYBLOCKS_PUBLIC_KEY }}
+          STORYBLOCKS_PRIVATE_KEY: ${{ secrets.STORYBLOCKS_PRIVATE_KEY }}
+          STOCK_PROVIDER: ${{ vars.STOCK_PROVIDER }}
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+          YOUTUBE_CLIENT_SECRETS_JSON: ${{ secrets.YOUTUBE_CLIENT_SECRETS_JSON }}
+          YOUTUBE_TOKEN_JSON: ${{ secrets.YOUTUBE_TOKEN_JSON }}
+          PRIVACY_STATUS: ${{ vars.PRIVACY_STATUS }}
+          TARGET_SECONDS: ${{ vars.TARGET_SECONDS }}
+        run: python src/main.py
+      - name: Upload artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: video-${{ github.run_id }}
+          path: output/*.mp4
