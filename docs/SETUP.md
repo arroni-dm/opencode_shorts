@@ -15,7 +15,8 @@ pip install -r requirements.txt
 Copy `.env.example` to `.env` and fill:
 - At least one stock media key: `PEXELS_API_KEY`, `PIXABAY_API_KEY`, `COVERR_API_KEY`, or Storyblocks keys.
 - `STOCK_PROVIDER=auto` (or pexels/pixabay/coverr/storyblocks)
-- Optional: `OPENAI_API_KEY` + `USE_OPENAI_TTS=true`
+- Optional LLM (Gemini is tried first, then OpenAI, then local fallback): `GEMINI_API_KEY`, `GEMINI_MODEL`, `OPENAI_API_KEY`, `OPENAI_MODEL`
+- Optional TTS: `USE_OPENAI_TTS=true` + `OPENAI_TTS_VOICE`
 - Optional: `YOUTUBE_API_KEY` for niche/reference research (150-200 shortlisted videos)
 - YouTube upload credentials (step 4)
 - `TARGET_SECONDS=55` (50-60s window)

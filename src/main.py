@@ -15,7 +15,9 @@ from upload import upload
 
 def main():
     openai_key = os.getenv("OPENAI_API_KEY")
-    model = os.getenv("OPENAI_MODEL") or "gpt-4o-mini"
+    openai_model = os.getenv("OPENAI_MODEL") or "gpt-4o-mini"
+    gemini_key = os.getenv("GEMINI_API_KEY")
+    gemini_model = os.getenv("GEMINI_MODEL") or "gemini-2.0-flash"
     yt_api_key = os.getenv("YOUTUBE_API_KEY")
     privacy = os.getenv("PRIVACY_STATUS") or "private"
 
@@ -32,7 +34,9 @@ def main():
         patterns = summarize_patterns(refs)
         print(f"Reference videos shortlisted: {len(refs)}")
 
-    script = generate_script(topic_obj, openai_key=openai_key, model=model, used_topics=used)
+    script = generate_script(topic_obj, openai_key=openai_key, openai_model=openai_model,
+                            gemini_key=gemini_key, gemini_model=gemini_model,
+                            used_topics=used)
     # attach niche patterns into description? keep title
     print("Title:", script["title"])
 
