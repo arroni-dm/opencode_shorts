@@ -27,3 +27,6 @@ concat.txt
 Thumbs.db
 .vscode/
 .idea/
+
+# Runtime state
+state/
